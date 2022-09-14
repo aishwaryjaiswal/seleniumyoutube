@@ -1,0 +1,77 @@
+package introduction;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+public class youtube {
+
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\Aishwary.Jaiswal\\Downloads\\chromedriver_win32 (1)\\chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+		driver.get("https://www.youtube.com/");
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		//Thread.sleep(2000);
+		driver.manage().window().maximize();
+		driver.findElement(By.xpath("//input[@id='search']")).sendKeys("selenium");
+		//Thread.sleep(2000);
+		driver.findElement(By.cssSelector("#search-icon-legacy")).click();
+		//unable to use explicit wait
+		Thread.sleep(2000);
+		js.executeScript("window.scrollBy(0,1000)");
+		driver.findElement(By.xpath("//div[@id='start']//yt-icon[@id='guide-icon']")).click();
+		//Thread.sleep(2000);
+		//Locating element by link text and store in variable "Element"        		
+        WebElement Element = driver.findElement(By.xpath("//yt-formatted-string[normalize-space()='Sports']"));
+
+        // Scrolling down the page till the element is found		
+        js.executeScript("arguments[0].scrollIntoView();", Element);
+        Element.click();
+        //Thread.sleep(1000);
+        
+		driver.findElement(By.xpath("//div[@id='start']//yt-icon[@id='guide-icon']")).click();
+		WebElement Element2= driver.findElement(By.id("guide-links-primary"));
+        js.executeScript("arguments[0].scrollIntoView();", Element2);
+        //Thread.sleep(2000);
+        System.out.println(Element2.findElements(By.tagName("a")).size());
+        //
+        
+        for (int i = 0; i < Element2.findElements(By.tagName("a")).size(); i++)
+            {
+			String click = Keys.chord(Keys.CONTROL,Keys.ENTER);
+			Element2.findElements(By.tagName("a")).get(i).sendKeys(click);
+			Thread.sleep(5000);
+			}
+        String winHandleBefore = driver.getWindowHandle();//for line 65
+
+        
+        ArrayList<String> abc = new ArrayList (driver.getWindowHandles());
+        //iterator picks out last element first
+		//Iterator<String> it = abc.iterator();
+		//while (it.hasNext()) 
+        for (int i=abc.size()-1;i>-1;i--)
+        {
+			driver.switchTo().window(abc.get(i));
+			System.out.println(driver.getTitle());
+		}
+
+		driver.switchTo().window(winHandleBefore);
+		driver.findElement(By.xpath("//div[@id='header']//yt-icon[@id='guide-icon']")).click();
+
+		driver.quit();
+
+	}
+
+}
